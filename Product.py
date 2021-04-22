@@ -21,8 +21,14 @@ class Product:
         product['id'] = bs.find('span', class_='product__desc-number--bold').get_text()
         product['price'] = bs.find('p', class_='price-vs').get_text()
         product['weight'] = bs.find('p', class_='product__availability-item').find('span').get_text()
+        product['availability'] = self.get_availability(bs)
         
+
         pass
+
+    def get_availability(self, bs):
+        availability = bs.find_all('p', class_ ='product__availability-item')[1].find('span').get_text()
+        return 'No' if availability == 'Nie' else 'Yes'
 
 
 
