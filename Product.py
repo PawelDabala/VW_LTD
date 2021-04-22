@@ -22,7 +22,8 @@ class Product:
         product['price'] = bs.find('p', class_='price-vs').get_text()
         product['weight'] = bs.find('p', class_='product__availability-item').find('span').get_text()
         product['availability'] = self.get_availability(bs)
-        
+        product['expected_availability'] = bs.find_all('p', class_="product__availability-item")[2].get_text("|", strip=True)
+
 
         pass
 
