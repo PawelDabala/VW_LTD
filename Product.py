@@ -9,5 +9,10 @@ class Product:
         self.name = name
         self.path = path
 
-    def get_data(self, path):
+    def get_page(self, path):
+        page = get(path)
+        bs = BeautifulSoup(page, "html.parser")
+        return bs
+
+
 
