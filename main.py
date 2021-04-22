@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 from requests import get
-import pprint
 
 
 class VW_LCV:

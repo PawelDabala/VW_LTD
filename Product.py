@@ -3,16 +3,31 @@ from requests import get
 
 
 class Product:
-    def __init__(self, product_name, products, name, path):
+    def __init__(self, product_name, products,  path):
         self.product_name = product_name
         self.products = products
-        self.name = name
-        self.path = path
+
+        bs = self.get_page(path=path)
+        self.set_product(bs=bs)
 
     def get_page(self, path):
         page = get(path)
-        bs = BeautifulSoup(page, "html.parser")
+        bs = BeautifulSoup(page.content, "html.parser")
         return bs
 
+    def set_product(self, bs):
+        product ={}
+        product['name'] = self.product_name
+        product['id'] = bs.find('span', class_='product__desc-number--bold').text()
+        pass
+        
 
 
+
+
+if __name__ == '__main__':
+    product = Product(product_name='CADDY 5',
+                      products=['BAGAŻNIKI', 'BAGAŻNIKI DACHOWE',
+                                'Belki bagażnika dachowego VW Caddy 5, do montażu na relingach, 2 szt.'],
+                      path='https://vwdostawcze-sklep.pl/katalog/1/belki-bagaznika-dachowego-vw-caddy-544-do-montazu-na-relingach44-2-szt46,208403.html',
+                      )
