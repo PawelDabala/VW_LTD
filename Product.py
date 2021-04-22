@@ -17,13 +17,16 @@ class Product:
 
     def set_product(self, bs):
         product ={}
-        product['name'] = self.product_name
+        product['main_category'] = self.product_name
+        product['sub_name'] = self.products[-1]
+        product['subproducts'] = self.products
         product['id'] = bs.find('span', class_='product__desc-number--bold').get_text()
         product['price'] = bs.find('p', class_='price-vs').get_text()
         product['weight'] = bs.find('p', class_='product__availability-item').find('span').get_text()
         product['availability'] = self.get_availability(bs)
         product['expected_availability'] = bs.find_all('p', class_="product__availability-item")[2].get_text("|", strip=True)
         product['images'] = self.get_image(bs)
+        product['description'] = self.get_description(bs)
         pass
 
     def get_availability(self, bs):
@@ -33,6 +36,10 @@ class Product:
     def get_image(self, bs):
         images = bs.find('div', class_ ='swiper-wrapper').find_all('img')
         return [image['src'] for image in images]
+
+    def get_description(self, bs):
+        description = bs.find('div', class_ = 'product__txt-desc').get_text("|", strip=True)
+        return description.replace('\xa0', '')
 
 
 if __name__ == '__main__':
