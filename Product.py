@@ -23,16 +23,16 @@ class Product:
         product['weight'] = bs.find('p', class_='product__availability-item').find('span').get_text()
         product['availability'] = self.get_availability(bs)
         product['expected_availability'] = bs.find_all('p', class_="product__availability-item")[2].get_text("|", strip=True)
-
-
+        product['images'] = self.get_image(bs)
         pass
 
     def get_availability(self, bs):
         availability = bs.find_all('p', class_ ='product__availability-item')[1].find('span').get_text()
         return 'No' if availability == 'Nie' else 'Yes'
 
-
-
+    def get_image(self, bs):
+        images = bs.find('div', class_ ='swiper-wrapper').find_all('img')
+        return [image['src'] for image in images]
 
 
 if __name__ == '__main__':
