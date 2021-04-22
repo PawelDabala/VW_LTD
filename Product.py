@@ -20,6 +20,8 @@ class Product:
         product['name'] = self.product_name
         product['id'] = bs.find('span', class_='product__desc-number--bold').get_text()
         product['price'] = bs.find('p', class_='price-vs').get_text()
+        product['weight'] = bs.find('p', class_='product__availability-item').find('span').get_text()
+        
         pass
 
 
