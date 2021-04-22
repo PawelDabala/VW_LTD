@@ -18,9 +18,10 @@ class Product:
     def set_product(self, bs):
         product ={}
         product['name'] = self.product_name
-        product['id'] = bs.find('span', class_='product__desc-number--bold').text()
+        product['id'] = bs.find('span', class_='product__desc-number--bold').get_text()
+        product['price'] = bs.find('p', class_='price-vs').get_text()
         pass
-        
+
 
 
 
