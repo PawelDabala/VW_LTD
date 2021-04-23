@@ -3,6 +3,7 @@ from requests import get
 from product import Product
 import time
 import json
+import csv
 
 
 class VW_LCV:
@@ -19,6 +20,7 @@ class VW_LCV:
         self.get_subcategoires(bs, categories)
         products = self.set_products()
         self.set_json(products)
+        self.set_csv_fb(products)
         print('############ DONE ############')
 
     def get_category_list(self, bs):
@@ -122,6 +124,29 @@ class VW_LCV:
         filename = f'files/vw_lcv' + time.strftime("%Y%m%d-%H%M%S") + '.txt'
         with open(filename, 'w') as outfile:
             json.dump(products, outfile)
+
+    def set_csv_fb(self, products):
+        header = ['id', 'title', 'description', 'availability', 'condition', 'price', 'link', 'image_link', 'brand',
+                  'additional_image_link', 'google_product_category']
+
+        filename = f'files/vw_lcv_fb_' + time.strftime("%Y%m%d-%H%M%S") + '.csv'
+        with open(filename, 'w', newline='', encoding='utf-8') as output_file:
+            thewriter = csv.writer(output_file)
+            thewriter.writerow(header)
+            for product in products:
+                thewriter.writerow([product['id'],
+                                    product['sub_name'],
+                                    product['description'],
+                                    product['availability'],
+                                    product['condition'],
+                                    product['price'],
+                                    product['link'],
+                                    product['image_link'],
+                                    product['brand'],
+                                    product['additional_image_link'],
+                                    product['google_product_category']
+                                    ])
+
 
 
 VW_LCV()
