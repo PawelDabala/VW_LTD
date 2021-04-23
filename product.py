@@ -10,14 +10,14 @@ class Product:
         self.product = {}
 
         bs = self.get_page(path=path)
-        self.set_product(bs=bs, page_address=page_address)
+        self.set_product(bs=bs, page_address=page_address, path=path)
 
     def get_page(self, path):
         page = get(path)
         bs = BeautifulSoup(page.content, "html.parser")
         return bs
 
-    def set_product(self, bs, page_address):
+    def set_product(self, bs, page_address, path):
         self.product['main_category'] = self.product_name
         self.product['sub_name'] = self.products[-1]
         self.product['subproducts'] = self.products
@@ -30,6 +30,11 @@ class Product:
         self.product['images'] = self.get_image(bs, page_address)
         self.product['description'] = self.get_description(bs)
         self.product['condition'] = 'New'
+        self.product['link'] = path
+        self.product['image_link'] = self.get_first_image_link(links_images=self.product['images'])
+        self.product['brand'] = 'VW'
+        self.product['additional_image_link'] = self.additional_image_link(links_images = self.product['images'])
+        self.product['google_product_category'] = None
 
     def get_availability(self, bs):
         availability = bs.find_all('p', class_='product__availability-item')[1].find('span').get_text()
@@ -46,7 +51,13 @@ class Product:
     def get_price(self, bs):
         text = bs.find('p', class_='price-vs').get_text()
         text = text.replace('PLN', '').replace(' ', '')
-        return text + ' PLN'
+        return text + '.00 PLN'
+
+    def get_first_image_link(self, links_images: list):
+        return links_images[0] if len(links_images) > 0 else ''
+
+    def additional_image_link(self, links_images: list):
+        return ','.join(links_images[1:]) if len(links_images) >= 2 else ''
 
     def get_product(self):
         pprint(self.product)
