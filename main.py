@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup
 from requests import get
-import pprint
+from product import Product
+import time
+import json
 
 
 class VW_LCV:
@@ -15,6 +17,9 @@ class VW_LCV:
     def set_spider(self, bs):
         categories = self.get_category_list(bs)
         self.get_subcategoires(bs, categories)
+        products = self.set_products()
+        self.set_json(products)
+        print('############ DONE ############')
 
     def get_category_list(self, bs):
         category_links = bs.find('ul', class_="category-list swiper-wrapper").find_all("a")
@@ -35,7 +40,6 @@ class VW_LCV:
             subproducts_page = get(subproduct_address)
             bs_subproducts_list = BeautifulSoup(subproducts_page.content, "html.parser")
             self.final_data.extend(self.get_products(bs_subproducts_list, category['name']))
-        pass
 
     def get_products(self, subproducts, name):
 
@@ -102,6 +106,22 @@ class VW_LCV:
 
             finish = not (all([dic['finish'] for dic in products]))
         return products
+
+    def set_products(self):
+        products = []
+        for data in self.final_data:
+            product = Product(product_name=data['product_name'],
+                              products=data['products'],
+                              path=self.page_address + data['path'],
+                              page_address=self.page_address
+                              )
+            products.append(product.get_product())
+        return products
+
+    def set_json(self, products):
+        filename = f'files/vw_lcv' + time.strftime("%Y%m%d-%H%M%S") + '.txt'
+        with open(filename, 'w') as outfile:
+            json.dump(products, outfile)
 
 
 VW_LCV()
