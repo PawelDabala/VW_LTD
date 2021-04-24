@@ -4,6 +4,7 @@ from product import Product
 import time
 import json
 import csv
+import shutil
 
 
 class VW_LCV:
@@ -130,7 +131,7 @@ class VW_LCV:
         header = ['id', 'title', 'description', 'availability', 'condition', 'price', 'link', 'image_link', 'brand',
                   'additional_image_link', 'google_product_category']
 
-        filename = f'files/vw_lcv_fb_' + time.strftime("%Y%m%d-%H%M%S") + '.csv'
+        filename = f'files/vw_lcv_fb_.csv'
         with open(filename, 'w', newline='', encoding='utf-8') as output_file:
             thewriter = csv.writer(output_file)
             thewriter.writerow(header)
@@ -148,11 +149,15 @@ class VW_LCV:
                                     product['google_product_category']
                                     ])
 
+            original = filename
+            target = filename.replace('.csv', '') + time.strftime("%Y%m%d-%H%M%S") + '.csv'
+            shutil.copyfile(original, target)
+
     def set_csv_gmc(self, products):
         header = ['id',	'title',	'link',	'gtin'	,'price'	,'shipping',	'image_link',	'availability'	,'brand'	,'condition',
                   'google_product_category',	'custom_label_0',	'custom_label_1',	'ads_label'	'description']
 
-        filename = f'files/vw_lcv_gmc_' + time.strftime("%Y%m%d-%H%M%S") + '.csv'
+        filename = f'files/vw_lcv_gmc_.csv'
         with open(filename, 'w', newline='', encoding='utf-8') as output_file:
             thewriter = csv.writer(output_file)
             thewriter.writerow(header)
@@ -173,6 +178,9 @@ class VW_LCV:
                                     product['custom_label_0'],
                                     product['description'],
                                     ])
+            original = filename
+            target = filename.replace('.csv', '') + time.strftime("%Y%m%d-%H%M%S") + '.csv'
+            shutil.copyfile(original, target)
 
 
 VW_LCV()
