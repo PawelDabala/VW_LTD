@@ -34,7 +34,14 @@ class Product:
         self.product['image_link'] = self.get_first_image_link(links_images=self.product['images'])
         self.product['brand'] = 'VW'
         self.product['additional_image_link'] = self.additional_image_link(links_images = self.product['images'])
+        # fb SPRZĘT IT > Napędy optyczne
         self.product['google_product_category'] = None
+        self.product['sipping'] = 'PL:::15.00 PLN'
+        self.product['google_product_category_nr'] = None
+        # gg pralki-i-suszarki
+        self.product['custom_label_0'] = None
+        self.product['availability_'] = self.product['availability'].replace(' ', '_')
+
 
     def get_availability(self, bs):
         availability = bs.find_all('p', class_='product__availability-item')[1].find('span').get_text()

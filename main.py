@@ -21,6 +21,7 @@ class VW_LCV:
         products = self.set_products()
         self.set_json(products)
         self.set_csv_fb(products)
+        self.set_csv_gmc(products)
         print('############ DONE ############')
 
     def get_category_list(self, bs):
@@ -111,7 +112,7 @@ class VW_LCV:
 
     def set_products(self):
         products = []
-        for data in self.final_data:
+        for data in self.final_data[:10]:
             product = Product(product_name=data['product_name'],
                               products=data['products'],
                               path=self.page_address + data['path'],
@@ -147,6 +148,31 @@ class VW_LCV:
                                     product['google_product_category']
                                     ])
 
+    def set_csv_gmc(self, products):
+        header = ['id',	'title',	'link',	'gtin'	,'price'	,'shipping',	'image_link',	'availability'	,'brand'	,'condition',
+                  'google_product_category',	'custom_label_0',	'custom_label_1',	'ads_label'	'description']
+
+        filename = f'files/vw_lcv_gmc_' + time.strftime("%Y%m%d-%H%M%S") + '.csv'
+        with open(filename, 'w', newline='', encoding='utf-8') as output_file:
+            thewriter = csv.writer(output_file)
+            thewriter.writerow(header)
+            for product in products:
+                thewriter.writerow([product['id'],
+                                    product['sub_name'],
+                                    product['link'],
+                                    product['id'],
+                                    product['price'],
+                                    product['sipping'],
+                                    product['image_link'],
+                                    product['availability'],
+                                    product['brand'],
+                                    product['condition'],
+                                    product['google_product_category_nr'],
+                                    product['custom_label_0'],
+                                    product['availability_'],
+                                    product['custom_label_0'],
+                                    product['description'],
+                                    ])
 
 
 VW_LCV()
