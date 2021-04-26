@@ -113,7 +113,7 @@ class VW_LCV:
 
     def set_products(self):
         products = []
-        for data in self.final_data[:10]:
+        for data in self.final_data:
             product = Product(product_name=data['product_name'],
                               products=data['products'],
                               path=self.page_address + data['path'],
