@@ -1,23 +1,35 @@
 from bs4 import BeautifulSoup
 from requests import get
 from pprint import pprint
+from product_search import FindProduct
 
 
 class Product:
-    def __init__(self, product_name, products, path, page_address):
+    def __init__(self, product_name, products, path, page_address, products_category):
         self.product_name = product_name
         self.products = products
         self.product = {}
+        product_category = self.get_product_category(products_category, products[-1])
 
         bs = self.get_page(path=path)
-        self.set_product(bs=bs, page_address=page_address, path=path)
+        self.set_product(bs=bs, page_address=page_address, path=path, product_category=product_category)
 
     def get_page(self, path):
         page = get(path)
         bs = BeautifulSoup(page.content, "html.parser")
         return bs
 
-    def set_product(self, bs, page_address, path):
+    def get_product_category(self, products_category, product_name):
+        product_category = {}
+        find_product = FindProduct(products_category)
+        find_product.get_product(product_name)
+
+        product_category['nr'] = find_product.get_google_nr()
+        product_category['last_category'] = find_product.get_last_category_google()
+        product_category['path'] = find_product.get_fb_product_path()
+        return product_category
+
+    def set_product(self, bs, page_address, path, product_category):
         self.product['main_category'] = self.product_name
         self.product['sub_name'] = self.products[-1]
         self.product['subproducts'] = self.products
@@ -33,15 +45,14 @@ class Product:
         self.product['link'] = path
         self.product['image_link'] = self.get_first_image_link(links_images=self.product['images'])
         self.product['brand'] = 'VW'
-        self.product['additional_image_link'] = self.additional_image_link(links_images = self.product['images'])
+        self.product['additional_image_link'] = self.additional_image_link(links_images=self.product['images'])
         # fb SPRZĘT IT > Napędy optyczne
-        self.product['google_product_category'] = None
+        self.product['google_product_category'] = product_category['path']
         self.product['sipping'] = 'PL:::15.00 PLN'
-        self.product['google_product_category_nr'] = None
+        self.product['google_product_category_nr'] = product_category['nr']
         # gg pralki-i-suszarki
-        self.product['custom_label_0'] = None
+        self.product['custom_label_0'] = product_category['last_category'].replace(' ', '-') if product_category['last_category'] is not None else None
         self.product['availability_'] = self.product['availability'].replace(' ', '_')
-
 
     def get_availability(self, bs):
         availability = bs.find_all('p', class_='product__availability-item')[1].find('span').get_text()
