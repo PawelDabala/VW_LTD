@@ -27,9 +27,10 @@ class VW_LCV:
         categories = self.get_category_list(bs)
         self.get_subcategoires(bs, categories)
         products = self.set_products(product_category)
-        self.set_json(products)
-        self.set_csv_fb(products)
-        self.set_csv_gmc(products)
+        uni_products = self.remove_duplicate(products)
+        self.set_json(uni_products)
+        self.set_csv_fb(uni_products)
+        self.set_csv_gmc(uni_products)
         print('############ DONE ############')
 
     def get_category_list(self, bs):
@@ -190,6 +191,16 @@ class VW_LCV:
             original = filename
             target = filename.replace('.csv', '') + time.strftime("%Y%m%d-%H%M%S") + '.csv'
             shutil.copyfile(original, target)
+
+    def remove_duplicate(self, products):
+        unic_id = []
+        unic_products = []
+        for product in products:
+            if product['id'] not in unic_id:
+                unic_products.append(product)
+                unic_id.append(product['id'])
+
+        return unic_products
 
 
 VW_LCV()
