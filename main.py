@@ -165,7 +165,7 @@ class VW_LCV:
     def set_csv_gmc(self, products):
         header = ['id', 'title', 'link', 'gtin', 'price', 'shipping', 'image_link', 'availability', 'brand',
                   'condition',
-                  'google_product_category', 'custom_label_0', 'custom_label_1', 'ads_label'    'description']
+                  'google_product_category', 'custom_label_0', 'custom_label_1', 'ads_label', 'description']
 
         filename = f'files/vw_lcv_gmc_.csv'
         with open(filename, 'w', newline='', encoding='utf-8') as output_file:
