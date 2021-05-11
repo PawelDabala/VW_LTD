@@ -163,7 +163,7 @@ class VW_LCV:
             shutil.copyfile(original, target)
 
     def set_csv_gmc(self, products):
-        header = ['id', 'title', 'link', 'gtin', 'price', 'shipping', 'image_link', 'availability', 'brand',
+        header = ['id', 'title', 'link',  'price', 'shipping', 'image_link', 'availability', 'brand',
                   'condition',
                   'google_product_category', 'custom_label_0', 'custom_label_1', 'ads_label', 'description']
 
@@ -175,7 +175,6 @@ class VW_LCV:
                 thewriter.writerow([product['id'],
                                     product['sub_name'],
                                     product['link'],
-                                    product['id'],
                                     product['price'],
                                     product['sipping'],
                                     product['image_link'],
