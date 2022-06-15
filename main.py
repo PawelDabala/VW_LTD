@@ -61,7 +61,9 @@ class VW_LCV:
             subproducts_page = get(subproduct_address)
             bs_subproducts_list = BeautifulSoup(subproducts_page.content, "html.parser")
             self.final_data.extend(
-                self.get_products(bs_subproducts_list, category["name"], subproduct_address)
+                self.get_products(
+                    bs_subproducts_list, category["name"], subproduct_address
+                )
             )
 
     def get_products(self, subproducts, name, subproduct_addresss):
@@ -71,9 +73,10 @@ class VW_LCV:
         while finish:
             if len(products) == 0:
                 # make new dictinary
-                alists = subproducts.find_all("a", class_="product-list__item")
+                # alists = subproducts.find_all("a", class_="product-list__item")
                 subproducts_test = self.scroll_page(subproduct_addresss)
-                pass
+                alists = subproducts_test.find_all("a", class_="product-list__item")
+
                 if len(alists) == 0:
                     continue
                 price = (
@@ -107,8 +110,9 @@ class VW_LCV:
                 # add product to key products
                 temp_products = []
                 for product in products:
-                    path = get(self.page_address + product["path"])
-                    products_bs = BeautifulSoup(path.content, "html.parser")
+                    # path = get(self.page_address + product["path"])
+                    # products_bs = BeautifulSoup(path.content, "html.parser")
+                    products_bs = self.scroll_page(self.page_address + product["path"])
                     alists = products_bs.find_all("a", class_="product-list__item")
                     if len(alists) == 0:
                         continue
@@ -149,11 +153,9 @@ class VW_LCV:
     def scroll_page(self, subcategory_url):
         driver = webdriver.Chrome(self.webdriver)
         driver.implicitly_wait(5)
-        links = []
 
         try:
             SCROLL_PAUSA_TIME = 3
-            # driver.get("https://sklep.skoda-auto.pl/modele.html")
             driver.get(subcategory_url)
 
             last_height = driver.execute_script("return document.body.scrollHeight")
@@ -165,7 +167,6 @@ class VW_LCV:
                     time.sleep(3)
                     break
                 last_height = new_height
-                print(new_height)
         finally:
             bs = BeautifulSoup(driver.page_source, "html.parser")
             return bs
