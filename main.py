@@ -6,6 +6,7 @@ import json
 import csv
 import shutil
 from openpyxl import load_workbook
+from selenium import webdriver
 
 
 class VW_LCV:
@@ -13,6 +14,7 @@ class VW_LCV:
 
     def __init__(self):
         self.final_data = []
+        s
         product_category = self.get_product_category()
         page = get(self.page_address)
         self.bs = BeautifulSoup(page.content, "html.parser")
