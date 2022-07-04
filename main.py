@@ -126,6 +126,8 @@ class VW_LCV:
 
                     if price:
                         # "no more subcategories"
+                        #TODO STOP HEAR
+                        #nie rozwiazuje problemu trzeba poszukać sekcjji size w produkcie
                         for alist in alists:
                             temp_product = {}
                             products_list = product["products"].copy()
