@@ -55,16 +55,17 @@ class VW_LCV:
         """
         Get subproducts for each category"
         """
-
         for category in categories:
-            subproduct_address = self.page_address + category["link"]
-            subproducts_page = get(subproduct_address)
-            bs_subproducts_list = BeautifulSoup(subproducts_page.content, "html.parser")
-            self.final_data.extend(
-                self.get_products(
-                    bs_subproducts_list, category["name"], subproduct_address
+            #TODO REMOVE IF
+            if category["name"] == 'KOLEKCJA T1':
+                subproduct_address = self.page_address + category["link"]
+                subproducts_page = get(subproduct_address)
+                bs_subproducts_list = BeautifulSoup(subproducts_page.content, "html.parser")
+                self.final_data.extend(
+                    self.get_products(
+                        bs_subproducts_list, category["name"], subproduct_address
+                    )
                 )
-            )
 
     def get_products(self, subproducts, name, subproduct_addresss):
 
@@ -95,6 +96,7 @@ class VW_LCV:
                                 "finish": True,
                             }
                         )
+
 
                 else:
                     for alist in alists:
