@@ -57,7 +57,7 @@ class VW_LCV:
         Get subproducts for each category"
         """
         for category in categories:
-            # REMOVE IF
+            #TODO REMOVE IF
             # if category["name"] == "KOLEKCJA T1":
             subproduct_address = self.page_address + category["link"]
             subproducts_page = get(subproduct_address)
@@ -286,15 +286,24 @@ class VW_LCV:
     def remove_duplicate(self, products):
         unic_id = []
         unic_products = []
-        for product in products:
+        removed_id = []
+
+        for product in reversed(products):
             if product["id"] not in unic_id:
                 unic_products.append(product)
                 unic_id.append(product["id"])
+            else:
+                removed_id.append(product["id"])
 
+        with open(r'files/removed_id.txt', 'w') as fp:
+            for item in removed_id:
+                # write each item on a new line
+                fp.write("%s\n" % item)
         return unic_products
 
     def get_tshirt_size(self, products: list, product_category: list) -> list:
         tshirts = []
+
         for product in products:
             if product["tshirt_links"] is not None:
                 for tshirt_link in product["tshirt_links"]:
@@ -310,5 +319,6 @@ class VW_LCV:
 
         products.extend(tshirts)
         return products
+
 
 VW_LCV()
