@@ -5,10 +5,12 @@ from product_search import FindProduct
 
 
 class Product:
-    def __init__(self, product_name, products, path, page_address, products_category):
+    def __init__(self, product_name, products, path, page_address, products_category, tshirt = True):
         self.product_name = product_name
         self.products = products
         self.product = {}
+        self.tshirt = tshirt
+
         product_category = self.get_product_category(products_category, products[-1])
 
         bs = self.get_page(path=path)
@@ -54,6 +56,10 @@ class Product:
         self.product['custom_label_0'] = product_category['last_category'].replace(' ', '-') if product_category['last_category'] is not None else None
         self.product['availability_'] = self.product['availability'].replace(' ', '_')
 
+        if self.tshirt:
+            self.product['tshirt_links'] = self.get_tshirt_size(bs)
+
+        #check is bs
     def get_availability(self, bs):
         availability = bs.find_all('p', class_='product__availability-item')[1].find('span').get_text()
         return 'out of stock' if availability == 'Nie' else 'in stock'
@@ -80,6 +86,17 @@ class Product:
     def get_product(self):
         pprint(self.product)
         return self.product
+
+    def get_tshirt_size(self, bs) -> list:
+        """
+        Get all links to tshirt size products
+        """
+        product_list = bs.find('div', class_ = 'product__size-list')
+        if product_list is not None:
+            tshirts_links = [tshirt['href'] for tshirt in product_list.find_all('a') ]
+            return tshirts_links
+        else:
+            return None
 
 
 if __name__ == '__main__':
