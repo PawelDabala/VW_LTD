@@ -31,6 +31,7 @@ class VW_LCV:
         categories = self.get_category_list(bs)
         self.get_subcategoires(bs, categories)
         products = self.set_products(product_category)
+        products = self.get_tshirt_size(products, product_category)
         uni_products = self.remove_duplicate(products)
         self.set_json(uni_products)
         self.set_csv_fb(uni_products)
@@ -55,11 +56,14 @@ class VW_LCV:
         """
         Get subproducts for each category"
         """
-
         for category in categories:
+            # REMOVE IF
+            # if category["name"] == "KOLEKCJA T1":
             subproduct_address = self.page_address + category["link"]
             subproducts_page = get(subproduct_address)
-            bs_subproducts_list = BeautifulSoup(subproducts_page.content, "html.parser")
+            bs_subproducts_list = BeautifulSoup(
+                subproducts_page.content, "html.parser"
+            )
             self.final_data.extend(
                 self.get_products(
                     bs_subproducts_list, category["name"], subproduct_address
@@ -171,7 +175,7 @@ class VW_LCV:
             bs = BeautifulSoup(driver.page_source, "html.parser")
             return bs
 
-    def set_products(self, product_category):
+    def set_products(self, product_category: list):
         products = []
         for data in self.final_data:
             product = Product(
@@ -182,6 +186,7 @@ class VW_LCV:
                 products_category=product_category,
             )
             products.append(product.get_product())
+
         return products
 
     def set_json(self, products):
@@ -288,5 +293,22 @@ class VW_LCV:
 
         return unic_products
 
+    def get_tshirt_size(self, products: list, product_category: list) -> list:
+        tshirts = []
+        for product in products:
+            if product["tshirt_links"] is not None:
+                for tshirt_link in product["tshirt_links"]:
+                    tshirt = Product(
+                        product_name=product["main_category"],
+                        products=product["subproducts"],
+                        path=tshirt_link,
+                        page_address=self.page_address,
+                        products_category=product_category,
+                        tshirt=False,
+                    )
+                    tshirts.append(tshirt.get_product())
+
+        products.extend(tshirts)
+        return products
 
 VW_LCV()
