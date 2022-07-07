@@ -178,6 +178,7 @@ class VW_LCV:
     def set_products(self, product_category: list):
         products = []
         for data in self.final_data:
+            time.sleep(3)
             product = Product(
                 product_name=data["product_name"],
                 products=data["products"],
