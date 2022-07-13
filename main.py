@@ -9,6 +9,7 @@ from requests import get
 from selenium import webdriver
 
 from product import Product
+from upload_csv import send_csv
 
 
 class VW_LCV:
@@ -323,3 +324,4 @@ class VW_LCV:
 
 
 VW_LCV()
+send_csv()
